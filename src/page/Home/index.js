@@ -1,30 +1,46 @@
-import { HomePageContainer } from "./styles";
+import React, { useState } from "react";
+import { BsTrash } from 'react-icons/bs'
+import { MdVerified } from 'react-icons/md'
+import {
+  Container,
+  HomePageContainer,
+  InputAdd,
+  Button,
+  ListAddUl,
+} from "./styles";
+
+import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
-  const list = [
-    "lavar o banheiro",
-    "lavar o carro",
-    "lavar o cama",
-    "lavar o geladeira",
-    "lavar o gelo",
-  ];
+  const [list, setList] = useState([
+    { id: uuidv4(), task: "lavar o banheiro", finished: true },
+  ]);
 
-  function enterInput() {}
+  const [inputTask, setInputTask] = useState("");
 
-  function submitInput() {}
+  function enterInput(event) {
+    setInputTask(event.target.value);
+  }
+
+  function submitInput() {
+    setList([...list, { id: uuidv4(), task: inputTask, finished: false }]);
+  }
 
   return (
-    <HomePageContainer>
-      <input onChange={enterInput} placeholder="o que tenho que fazer" />
-      <button type="button" onClick={submitInput}>
-        Adicionar
-      </button>
-
-      <ul>
-        {list.map((item => (
-          <li key={item}>{item}</li>
-        )))}
-      </ul>
-    </HomePageContainer>
+    <Container>
+      <HomePageContainer>
+        <InputAdd onChange={enterInput} placeholder="o que tenho que fazer" />
+        <Button type="button" onClick={submitInput}>Adicionar</Button>
+        <ul>
+          {list.map((item) => (
+            <ListAddUl isFinished={item.finished} key={item.id}>
+              <MdVerified />
+              <li>{item.task}</li>
+              <BsTrash />
+            </ListAddUl>
+          ))}
+        </ul>
+      </HomePageContainer>
+    </Container>
   );
 }
