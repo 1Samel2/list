@@ -23,7 +23,21 @@ export default function Home() {
   }
 
   function submitInput() {
+    if(inputTask){
     setList([...list, { id: uuidv4(), task: inputTask, finished: false }]);
+    }
+  }
+
+  function finalizarTarefa(id) {
+    const newList = list.map(item => (
+      item.id === id ? { ...item, finished: !item.finished } : item
+    ))
+    setList(newList)
+  }
+
+  function deleteItems(id) {
+    const newList = list.filter(item => item.id !== id)
+    setList(newList)
   }
 
   return (
@@ -31,15 +45,20 @@ export default function Home() {
       <HomePageContainer>
         <InputAdd onChange={enterInput} placeholder="o que tenho que fazer" />
         <Button type="button" onClick={submitInput}>Adicionar</Button>
-        <ul>
-          {list.map((item) => (
-            <ListAddUl isFinished={item.finished} key={item.id}>
-              <MdVerified />
-              <li>{item.task}</li>
-              <BsTrash />
-            </ListAddUl>
-          ))}
-        </ul>
+        {
+          list.length > 0 ? (
+            <ul>
+              {list.map((item) => (
+                <ListAddUl isFinished={item.finished} key={item.id} >
+                  <MdVerified onClick={() => finalizarTarefa(item.id)} />
+                  <li>{item.task}</li>
+                  <BsTrash onClick={() => deleteItems(item.id)} />
+                </ListAddUl>
+              ))}
+            </ul>
+          ) : (
+            <h1>test</h1>
+          )}    
       </HomePageContainer>
     </Container>
   );
